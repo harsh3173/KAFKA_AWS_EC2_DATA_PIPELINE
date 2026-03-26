@@ -1,4 +1,4 @@
-kafka-python==2.0.2
+kafka-python-ng>=2.2.0
 pyspark==3.5.0
 pandas>=2.0.0
 requests>=2.31.0

@@ -20,11 +20,16 @@ class Config:
     s3_gold_prefix: str = "gold/stocks"
     s3_dead_letter_prefix: str = "dead_letter/stocks"
 
+    # Storage mode: "s3" or "local"
+    storage_mode: str = os.getenv("STORAGE_MODE", "s3")
+    local_data_dir: str = os.getenv("LOCAL_DATA_DIR", "/app/output")
+
     # Spark
     spark_app_name: str = os.getenv("SPARK_APP_NAME", "StockPipeline")
     spark_packages: str = "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0,org.apache.hadoop:hadoop-aws:3.3.4"
 
     # Producer
+    producer_mode: str = os.getenv("PRODUCER_MODE", "csv")  # "api" or "csv"
     producer_interval_seconds: int = int(os.getenv("PRODUCER_INTERVAL_SECONDS", "360"))
     producer_max_iterations: int = int(os.getenv("PRODUCER_MAX_ITERATIONS", "0"))  # 0 = infinite
 
@@ -34,19 +39,33 @@ class Config:
 
     @property
     def s3_bronze_path(self) -> str:
+        if self.storage_mode == "local":
+            return f"{self.local_data_dir}/{self.s3_bronze_prefix}"
         return f"s3a://{self.s3_bucket}/{self.s3_bronze_prefix}"
 
     @property
     def s3_silver_path(self) -> str:
+        if self.storage_mode == "local":
+            return f"{self.local_data_dir}/{self.s3_silver_prefix}"
         return f"s3a://{self.s3_bucket}/{self.s3_silver_prefix}"
 
     @property
     def s3_gold_path(self) -> str:
+        if self.storage_mode == "local":
+            return f"{self.local_data_dir}/{self.s3_gold_prefix}"
         return f"s3a://{self.s3_bucket}/{self.s3_gold_prefix}"
 
     @property
     def s3_dead_letter_path(self) -> str:
+        if self.storage_mode == "local":
+            return f"{self.local_data_dir}/{self.s3_dead_letter_prefix}"
         return f"s3a://{self.s3_bucket}/{self.s3_dead_letter_prefix}"
+
+    @property
+    def checkpoint_path(self) -> str:
+        if self.storage_mode == "local":
+            return f"{self.local_data_dir}/checkpoints/stock_pipeline"
+        return f"s3a://{self.s3_bucket}/checkpoints/stock_pipeline"
 
 
 config = Config()

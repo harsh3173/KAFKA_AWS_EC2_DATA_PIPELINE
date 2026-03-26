@@ -6,7 +6,6 @@ from pyspark.sql.functions import (
     current_timestamp,
     explode,
     from_json,
-    lag,
     round as spark_round,
     sum as spark_sum,
     to_date,
@@ -14,7 +13,7 @@ from pyspark.sql.functions import (
     min as spark_min,
     abs as spark_abs,
 )
-from pyspark.sql.window import Window
+
 
 from src.schemas import STOCK_ARRAY_DDL, SP500_STOCK_ARRAY_DDL
 

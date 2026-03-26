@@ -1,11 +1,8 @@
-import json
 import logging
 from dataclasses import dataclass
 
-from pyspark.sql import DataFrame, SparkSession
+from pyspark.sql import DataFrame
 from pyspark.sql.functions import col
-
-from src.schemas import REQUIRED_FIELDS
 
 logger = logging.getLogger(__name__)
 
