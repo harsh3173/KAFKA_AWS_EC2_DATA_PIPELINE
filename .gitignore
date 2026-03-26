@@ -1,0 +1,49 @@
+# Environment
+.env
+*.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Terraform
+terraform/.terraform/
+terraform/*.tfstate
+terraform/*.tfstate.backup
+terraform/.terraform.lock.hcl
+
+# Spark
+metastore_db/
+derby.log
+spark-warehouse/
+
+# Data
+data/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Airflow
+airflow.db
+airflow-webserver.pid
+logs/
+
+# AI tooling
+CLAUDE.md
+.claude/
+.cursorrules
+.cursorignore
+.cursor/
+.aider*
+.copilot/
+.codeium/
