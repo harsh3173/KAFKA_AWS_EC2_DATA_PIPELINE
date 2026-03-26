@@ -60,7 +60,7 @@ services:
     restart: on-failure
     depends_on:
       - kafka
-    command: ["python", "-m", "src.producer", "--mode", "${PRODUCER_MODE:-api}"]
+    command: ["python", "-m", "src.producer", "--mode", "${PRODUCER_MODE:-csv}"]
     environment:
       KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       KAFKA_TOPIC: ${KAFKA_TOPIC:-test_kafka_aws}
