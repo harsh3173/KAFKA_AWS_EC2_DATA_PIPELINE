@@ -2,15 +2,28 @@
   "annotations": { "list": [] },
   "editable": true,
   "fiscalYearStartMonth": 0,
-  "graphTooltip": 1,
+  "graphTooltip": 2,
   "id": null,
   "links": [],
   "panels": [
     {
+      "gridPos": { "h": 2, "w": 24, "x": 0, "y": 0 },
+      "id": 200,
+      "options": {
+        "code": { "language": "plaintext", "showLineNumbers": false },
+        "content": "# S&P 500 Real-Time Data Pipeline\n**Data Sources → Kafka Producer → Kafka Broker → Spark Streaming → Medallion Lake (Bronze → Silver → Gold)**\n\nThis dashboard tracks the health and throughput of the end-to-end stock data pipeline ingesting 600K+ S&P 500 OHLCV records.",
+        "mode": "markdown"
+      },
+      "title": "",
+      "transparent": true,
+      "type": "text"
+    },
+
+    {
       "collapsed": false,
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 },
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 2 },
       "id": 100,
-      "title": "Kafka Cluster Overview",
+      "title": "⚡ Pipeline Health at a Glance",
       "type": "row"
     },
     {
@@ -20,260 +33,529 @@
           "thresholds": {
             "mode": "absolute",
             "steps": [
-              { "color": "red", "value": null },
-              { "color": "green", "value": 1 }
+              { "color": "#F2495C", "value": null },
+              { "color": "#73BF69", "value": 1 }
             ]
           },
           "mappings": [
-            { "options": { "0": { "text": "DOWN" }, "1": { "text": "UP" } }, "type": "value" }
+            { "options": { "0": { "text": "DOWN", "color": "#F2495C" }, "1": { "text": "ONLINE", "color": "#73BF69" } }, "type": "value" }
           ],
           "color": { "mode": "thresholds" }
         }
       },
-      "gridPos": { "h": 4, "w": 4, "x": 0, "y": 1 },
+      "gridPos": { "h": 4, "w": 4, "x": 0, "y": 3 },
       "id": 1,
-      "options": { "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "title": "Kafka Brokers Up",
+      "options": { "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "justifyMode": "center", "textMode": "value" },
+      "title": "Kafka Broker",
       "type": "stat",
       "targets": [
         {
-          "datasource": { "type": "prometheus" },
-          "expr": "count(kafka_brokers)",
-          "legendFormat": "Brokers"
+          "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
+          "expr": "kafka_brokers",
+          "legendFormat": ""
         }
       ]
     },
     {
-      "datasource": { "type": "prometheus" },
+      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
       "fieldConfig": {
         "defaults": {
-          "color": { "mode": "palette-classic" },
-          "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] }
-        }
-      },
-      "gridPos": { "h": 4, "w": 4, "x": 4, "y": 1 },
-      "id": 2,
-      "options": { "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "title": "Total Topics",
-      "type": "stat",
-      "targets": [
-        {
-          "expr": "count(kafka_topic_partitions)",
-          "legendFormat": "Topics"
-        }
-      ]
-    },
-    {
-      "datasource": { "type": "prometheus" },
-      "fieldConfig": {
-        "defaults": {
-          "color": { "mode": "palette-classic" },
-          "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] },
-          "unit": "short"
-        }
-      },
-      "gridPos": { "h": 4, "w": 4, "x": 8, "y": 1 },
-      "id": 3,
-      "options": { "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "title": "Total Messages",
-      "type": "stat",
-      "targets": [
-        {
-          "expr": "sum(kafka_topic_partition_current_offset{topic=\"test_kafka_aws\"})",
-          "legendFormat": "Messages"
-        }
-      ]
-    },
-    {
-      "datasource": { "type": "prometheus" },
-      "fieldConfig": {
-        "defaults": {
-          "color": { "mode": "thresholds" },
           "thresholds": {
             "mode": "absolute",
             "steps": [
-              { "color": "green", "value": null },
-              { "color": "yellow", "value": 100 },
-              { "color": "red", "value": 1000 }
+              { "color": "#F2495C", "value": null },
+              { "color": "#73BF69", "value": 1 }
             ]
-          }
+          },
+          "mappings": [
+            { "options": { "0": { "text": "DOWN", "color": "#F2495C" }, "1": { "text": "ACTIVE", "color": "#73BF69" } }, "type": "value" }
+          ],
+          "color": { "mode": "thresholds" }
         }
       },
-      "gridPos": { "h": 4, "w": 4, "x": 12, "y": 1 },
-      "id": 4,
-      "options": { "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "title": "Consumer Lag",
+      "gridPos": { "h": 4, "w": 4, "x": 4, "y": 3 },
+      "id": 2,
+      "options": { "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "justifyMode": "center", "textMode": "value" },
+      "title": "Topics",
       "type": "stat",
       "targets": [
         {
-          "expr": "sum(kafka_consumergroup_lag{topic=\"test_kafka_aws\"})",
-          "legendFormat": "Lag"
+          "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
+          "expr": "count(kafka_topic_partitions)",
+          "legendFormat": ""
         }
       ]
     },
     {
-      "datasource": { "type": "prometheus" },
+      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
       "fieldConfig": {
         "defaults": {
-          "color": { "mode": "palette-classic" },
-          "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] }
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "#B877D9", "value": null }
+            ]
+          },
+          "color": { "mode": "thresholds" },
+          "unit": "short"
         }
       },
-      "gridPos": { "h": 4, "w": 4, "x": 16, "y": 1 },
-      "id": 5,
-      "options": { "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "title": "Pipeline Records Produced",
+      "gridPos": { "h": 4, "w": 4, "x": 8, "y": 3 },
+      "id": 3,
+      "options": { "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "justifyMode": "center", "textMode": "value_and_name" },
+      "title": "Records Produced",
       "type": "stat",
       "targets": [
         {
+          "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
           "expr": "pipeline_records_produced_total",
-          "legendFormat": "Produced"
+          "legendFormat": "total"
         }
       ]
     },
     {
-      "datasource": { "type": "prometheus" },
+      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
       "fieldConfig": {
         "defaults": {
-          "color": { "mode": "palette-classic" },
-          "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] }
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "#5794F2", "value": null }
+            ]
+          },
+          "color": { "mode": "thresholds" },
+          "unit": "short"
         }
       },
-      "gridPos": { "h": 4, "w": 4, "x": 20, "y": 1 },
-      "id": 6,
-      "options": { "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "title": "Pipeline Batches Sent",
+      "gridPos": { "h": 4, "w": 4, "x": 12, "y": 3 },
+      "id": 4,
+      "options": { "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "justifyMode": "center", "textMode": "value_and_name" },
+      "title": "Batches Sent",
       "type": "stat",
       "targets": [
         {
+          "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
           "expr": "pipeline_batches_sent_total",
-          "legendFormat": "Batches"
+          "legendFormat": "total"
         }
       ]
     },
     {
+      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "#73BF69", "value": null },
+              { "color": "#FF9830", "value": 1 },
+              { "color": "#F2495C", "value": 10 }
+            ]
+          },
+          "color": { "mode": "thresholds" },
+          "unit": "short"
+        }
+      },
+      "gridPos": { "h": 4, "w": 4, "x": 16, "y": 3 },
+      "id": 5,
+      "options": { "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "justifyMode": "center", "textMode": "value_and_name" },
+      "title": "Pipeline Errors",
+      "type": "stat",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
+          "expr": "pipeline_errors_total",
+          "legendFormat": "errors"
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "#FF9830", "value": null }
+            ]
+          },
+          "color": { "mode": "thresholds" },
+          "unit": "short"
+        }
+      },
+      "gridPos": { "h": 4, "w": 4, "x": 20, "y": 3 },
+      "id": 6,
+      "options": { "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "justifyMode": "center", "textMode": "value_and_name" },
+      "title": "Kafka Offset",
+      "type": "stat",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
+          "expr": "kafka_topic_partition_current_offset{topic=\"test_kafka_aws\"}",
+          "legendFormat": "head"
+        }
+      ]
+    },
+
+    {
       "collapsed": false,
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 5 },
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 7 },
       "id": 101,
-      "title": "Kafka Metrics Over Time",
+      "title": "📈 Ingestion — How Fast Is Data Entering the Pipeline?",
       "type": "row"
     },
     {
-      "datasource": { "type": "prometheus" },
+      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
       "fieldConfig": {
         "defaults": {
-          "color": { "mode": "palette-classic" },
-          "custom": { "lineWidth": 2, "fillOpacity": 15, "showPoints": "auto" }
+          "color": { "mode": "continuous-BlPu" },
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 25,
+            "gradientMode": "scheme",
+            "showPoints": "never",
+            "spanNulls": true,
+            "lineInterpolation": "smooth"
+          },
+          "unit": "short"
         }
       },
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 6 },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
       "id": 7,
-      "options": { "tooltip": { "mode": "multi" } },
-      "title": "Messages In Per Second",
-      "type": "timeseries",
-      "targets": [
-        {
-          "expr": "rate(kafka_topic_partition_current_offset{topic=\"test_kafka_aws\"}[1m])",
-          "legendFormat": "partition-{{partition}}"
-        }
-      ]
-    },
-    {
-      "datasource": { "type": "prometheus" },
-      "fieldConfig": {
-        "defaults": {
-          "color": { "mode": "palette-classic" },
-          "custom": { "lineWidth": 2, "fillOpacity": 15, "showPoints": "auto" }
-        }
+      "options": {
+        "tooltip": { "mode": "multi", "sort": "desc" },
+        "legend": { "displayMode": "list", "placement": "bottom" }
       },
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 6 },
-      "id": 8,
-      "options": { "tooltip": { "mode": "multi" } },
-      "title": "Consumer Group Lag Over Time",
+      "title": "Records Produced / sec",
+      "description": "Rate of S&P 500 stock records being published to Kafka by the producer. Each record is one stock's daily OHLCV data.",
       "type": "timeseries",
       "targets": [
         {
-          "expr": "kafka_consumergroup_lag{topic=\"test_kafka_aws\"}",
-          "legendFormat": "{{consumergroup}} p{{partition}}"
-        }
-      ]
-    },
-    {
-      "collapsed": false,
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 14 },
-      "id": 102,
-      "title": "Pipeline Throughput",
-      "type": "row"
-    },
-    {
-      "datasource": { "type": "prometheus" },
-      "fieldConfig": {
-        "defaults": {
-          "color": { "mode": "palette-classic" },
-          "custom": { "lineWidth": 2, "fillOpacity": 20, "showPoints": "auto" }
-        }
-      },
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 15 },
-      "id": 9,
-      "options": { "tooltip": { "mode": "multi" } },
-      "title": "Records Produced Over Time",
-      "type": "timeseries",
-      "targets": [
-        {
+          "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
           "expr": "rate(pipeline_records_produced_total[1m])",
           "legendFormat": "records/sec"
         }
       ]
     },
     {
-      "datasource": { "type": "prometheus" },
+      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
       "fieldConfig": {
         "defaults": {
-          "color": { "mode": "palette-classic" },
-          "custom": { "lineWidth": 2, "fillOpacity": 20, "showPoints": "auto" }
+          "color": { "mode": "continuous-YlBl" },
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 25,
+            "gradientMode": "scheme",
+            "showPoints": "never",
+            "spanNulls": true,
+            "lineInterpolation": "smooth"
+          },
+          "unit": "short"
         }
       },
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 15 },
-      "id": 10,
-      "options": { "tooltip": { "mode": "multi" } },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "id": 8,
+      "options": {
+        "tooltip": { "mode": "multi", "sort": "desc" },
+        "legend": { "displayMode": "list", "placement": "bottom" }
+      },
       "title": "Batch Send Rate",
+      "description": "How many date-grouped batches per second the producer is pushing. Each batch = one trading day of ~150 stocks.",
       "type": "timeseries",
       "targets": [
         {
+          "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
           "expr": "rate(pipeline_batches_sent_total[1m])",
           "legendFormat": "batches/sec"
         }
       ]
     },
+
     {
-      "datasource": { "type": "prometheus" },
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 16 },
+      "id": 102,
+      "title": "🔄 Kafka Broker — Message Flow Through the Streaming Layer",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
       "fieldConfig": {
         "defaults": {
-          "color": { "mode": "palette-classic" },
-          "custom": { "lineWidth": 2, "fillOpacity": 10 }
+          "color": { "mode": "continuous-GrYlRd" },
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 15,
+            "gradientMode": "scheme",
+            "showPoints": "never",
+            "spanNulls": true,
+            "lineInterpolation": "smooth"
+          },
+          "unit": "short"
         }
       },
-      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 23 },
-      "id": 11,
-      "options": { "tooltip": { "mode": "multi" } },
-      "title": "Kafka Topic Offset Growth",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 17 },
+      "id": 9,
+      "options": {
+        "tooltip": { "mode": "multi", "sort": "desc" },
+        "legend": { "displayMode": "list", "placement": "bottom" }
+      },
+      "title": "Kafka Messages In / sec",
+      "description": "Rate of new messages arriving at the Kafka broker on the pipeline topic. Measures the offset advancement rate per partition.",
       "type": "timeseries",
       "targets": [
         {
-          "expr": "kafka_topic_partition_current_offset{topic=\"test_kafka_aws\"}",
+          "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
+          "expr": "rate(kafka_topic_partition_current_offset{topic=\"test_kafka_aws\"}[1m])",
           "legendFormat": "partition-{{partition}}"
         }
       ]
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "continuous-blues" },
+          "custom": {
+            "lineWidth": 3,
+            "fillOpacity": 20,
+            "gradientMode": "scheme",
+            "showPoints": "never",
+            "spanNulls": true,
+            "lineInterpolation": "smooth"
+          },
+          "unit": "short"
+        }
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 17 },
+      "id": 10,
+      "options": {
+        "tooltip": { "mode": "multi", "sort": "desc" },
+        "legend": { "displayMode": "list", "placement": "bottom" }
+      },
+      "title": "Topic Offset Growth (Cumulative)",
+      "description": "Total messages written to the Kafka topic over time. A steadily rising line = healthy ingestion. Flat line = producer stopped.",
+      "type": "timeseries",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
+          "expr": "kafka_topic_partition_current_offset{topic=\"test_kafka_aws\"}",
+          "legendFormat": "partition-{{partition}} offset"
+        }
+      ]
+    },
+
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 25 },
+      "id": 103,
+      "title": "🏗️ Pipeline Throughput — End-to-End Data Volume",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "continuous-purples" },
+          "custom": {
+            "lineWidth": 3,
+            "fillOpacity": 30,
+            "gradientMode": "scheme",
+            "showPoints": "never",
+            "spanNulls": true,
+            "lineInterpolation": "smooth",
+            "stacking": { "mode": "none" }
+          },
+          "unit": "short"
+        }
+      },
+      "gridPos": { "h": 8, "w": 16, "x": 0, "y": 26 },
+      "id": 11,
+      "options": {
+        "tooltip": { "mode": "multi", "sort": "desc" },
+        "legend": { "displayMode": "list", "placement": "bottom", "calcs": ["lastNotNull", "max"] }
+      },
+      "title": "Cumulative Records Produced",
+      "description": "Total S&P 500 stock records pushed through the pipeline since startup. The dataset contains ~618K rows across 3768 trading days (2010–2024).",
+      "type": "timeseries",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
+          "expr": "pipeline_records_produced_total",
+          "legendFormat": "records produced"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
+          "expr": "pipeline_batches_sent_total",
+          "legendFormat": "batches (trading days)"
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "#37872D", "value": null },
+              { "color": "#E0B400", "value": 50 },
+              { "color": "#C4162A", "value": 80 }
+            ]
+          },
+          "min": 0,
+          "max": 100,
+          "unit": "percent"
+        }
+      },
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 26 },
+      "id": 12,
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "orientation": "auto"
+      },
+      "title": "Dataset Progress",
+      "description": "Percentage of the full S&P 500 dataset (3768 trading days) that has been streamed through the pipeline.",
+      "type": "gauge",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
+          "expr": "pipeline_batches_sent_total / 3768 * 100",
+          "legendFormat": "progress"
+        }
+      ]
+    },
+
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 34 },
+      "id": 104,
+      "title": "🛡️ Reliability — Error Tracking & Pipeline Stability",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "continuous-RdYlGr" },
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 15,
+            "gradientMode": "scheme",
+            "showPoints": "never",
+            "spanNulls": true,
+            "lineInterpolation": "smooth"
+          },
+          "unit": "short"
+        }
+      },
+      "gridPos": { "h": 7, "w": 12, "x": 0, "y": 35 },
+      "id": 13,
+      "options": {
+        "tooltip": { "mode": "multi", "sort": "desc" },
+        "legend": { "displayMode": "list", "placement": "bottom" }
+      },
+      "title": "Error Rate",
+      "description": "Rate of pipeline errors per second. Spikes here indicate API failures, serialization issues, or Kafka connectivity problems.",
+      "type": "timeseries",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
+          "expr": "rate(pipeline_errors_total[1m])",
+          "legendFormat": "errors/sec"
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "#73BF69", "value": null },
+              { "color": "#FF9830", "value": 0.001 },
+              { "color": "#F2495C", "value": 0.01 }
+            ]
+          },
+          "color": { "mode": "thresholds" },
+          "unit": "percentunit",
+          "decimals": 4
+        }
+      },
+      "gridPos": { "h": 7, "w": 6, "x": 12, "y": 35 },
+      "id": 14,
+      "options": { "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "justifyMode": "center", "textMode": "value_and_name" },
+      "title": "Error Rate %",
+      "description": "Errors as a fraction of total records produced. Target: < 0.01%.",
+      "type": "stat",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
+          "expr": "pipeline_errors_total / (pipeline_records_produced_total > 0 or vector(1))",
+          "legendFormat": "error ratio"
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "#73BF69", "value": null }
+            ]
+          },
+          "color": { "mode": "thresholds" },
+          "unit": "short"
+        }
+      },
+      "gridPos": { "h": 7, "w": 6, "x": 18, "y": 35 },
+      "id": 15,
+      "options": { "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "justifyMode": "center", "textMode": "value_and_name" },
+      "title": "Avg Records / Batch",
+      "description": "Average number of stock records per batch (trading day). The S&P 500 has ~500 stocks, so expect ~150-500 records per batch depending on the date.",
+      "type": "stat",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
+          "expr": "pipeline_records_produced_total / (pipeline_batches_sent_total > 0 or vector(1))",
+          "legendFormat": "records/batch"
+        }
+      ]
+    },
+
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 42 },
+      "id": 105,
+      "title": "🏛️ Architecture — Pipeline Flow",
+      "type": "row"
+    },
+    {
+      "gridPos": { "h": 5, "w": 24, "x": 0, "y": 43 },
+      "id": 201,
+      "options": {
+        "code": { "language": "plaintext", "showLineNumbers": false },
+        "content": "```\n  ┌─────────────────┐      ┌──────────────┐      ┌───────────────────────┐      ┌─────────────────────────────────────┐\n  │  Kaggle S&P 500  │─────▶│    Kafka      │─────▶│   Spark Structured    │─────▶│  Medallion Data Lake (Local / S3)   │\n  │  618K OHLCV rows │      │  Producer →   │      │   Streaming Consumer  │      │  Bronze │ Silver │ Gold │ Dead Ltr │\n  │  2010 – 2024     │      │  Broker       │      │   foreachBatch()      │      │  (raw)  │(clean) │(agg) │(quarant) │\n  └─────────────────┘      └──────────────┘      └───────────────────────┘      └─────────────────────────────────────┘\n         │                        │                         │                                    │\n         │                        ▼                         │                                    ▼\n         │                  Kafka Exporter ──▶ Prometheus ──▶ Grafana (this dashboard)     Streamlit Dashboard\n         │                                                                                 localhost:8501\n         └──────────────────── Airflow Orchestration (health checks, scheduling) ────────────────┘\n```",
+        "mode": "markdown"
+      },
+      "title": "",
+      "transparent": true,
+      "type": "text"
     }
   ],
   "refresh": "5s",
   "schemaVersion": 39,
-  "tags": ["kafka", "pipeline", "stock"],
+  "tags": ["kafka", "pipeline", "stock", "s&p500"],
   "templating": { "list": [] },
-  "time": { "from": "now-15m", "to": "now" },
+  "time": { "from": "now-30m", "to": "now" },
   "timepicker": {},
   "timezone": "browser",
-  "title": "Stock Pipeline - Kafka & Pipeline Metrics",
+  "title": "S&P 500 Pipeline — Real-Time Observability",
   "uid": "stock-pipeline-kafka",
-  "version": 1
+  "version": 2
 }
