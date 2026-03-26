@@ -29,9 +29,6 @@ data/
 .vscode/
 *.swp
 
-# Images / screenshots
-images/
-
 # OS
 .DS_Store
 Thumbs.db
