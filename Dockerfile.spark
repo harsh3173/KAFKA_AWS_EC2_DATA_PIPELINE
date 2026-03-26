@@ -1,9 +1,12 @@
-FROM bitnami/spark:3.5.0
+FROM python:3.11-slim
 
 USER root
 
-COPY requirements.txt /app/requirements.txt
-RUN pip install --no-cache-dir -r /app/requirements.txt
+RUN apt-get update && apt-get install -y --no-install-recommends openjdk-21-jre-headless && rm -rf /var/lib/apt/lists/*
+
+ENV JAVA_HOME=/usr/lib/jvm/java-21-openjdk-arm64
+
+RUN pip install --no-cache-dir kafka-python==2.0.2 pyspark==3.5.0 pandas boto3 requests
 
 COPY src/ /app/src/
 
